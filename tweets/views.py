@@ -1,4 +1,4 @@
-from django.views.generic import View
+from django.views.generic import View, FormView
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from user_profile.models import User
@@ -13,7 +13,10 @@ class Index(View):
         return render(request, 'base.html', params)
 
 
-class Profile(View):
+class Profile(FormView):
+    template_name = 'profile.html'
+    form_class = TweetForm
+
     def get(self, request, username):
         params = {}
         user = User.objects.get(username=username)
@@ -24,24 +27,8 @@ class Profile(View):
         params['form'] = form
         return render(request, 'profile.html', params)
 
-
-class PostTweet(View):
-    """Tweet Post form available on page /user/<username> URL"""
-    def post(self, request, username):
-        form = TweetForm(self.request.POST)
-        if form.is_valid():
-            user = User.objects.get(username=username)
-            tweet = Tweet(
-                text=form.cleaned_data['text'],
-                user=user,
-                country=form.cleaned_data['country'])
-            tweet.save()
-            words = form.cleaned_data['text'].split(" ")
-            for word in words:
-                if word[0] == "#":
-                    hashtag, created = HashTag.objects.get_or_create(
-                        name=word[1:])
-                    hashtag.tweet.add(tweet)
-            return HttpResponseRedirect('/user/'+username)
-        else:
-            return HttpResponse('Hi')
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.save()
+        value = form.cleaned_data['text']
+        return super(Profile, self).form_valid(form)

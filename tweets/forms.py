@@ -1,9 +1,8 @@
-from django import forms
+from django.forms import ModelForm
+from .models import Tweet
 
 
-class TweetForm(forms.Form):
-    text = forms.CharField(
-        widget=forms.Textarea(
-            attrs={'rows': 1, 'cols': 85}),
-        max_length=160)
-    country = forms.CharField(widget=forms.HiddenInput())
+class TweetForm(ModelForm):
+    class Meta:
+        model = Tweet
+        fields = ('user', 'text', 'country')
