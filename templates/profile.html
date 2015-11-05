@@ -2,7 +2,7 @@
 {% block content %}
   <div class="row clearfix">
     <div class="col-md-12 column">
-      <form method="post" action="">{% csrf_token %}
+      <form method="post" action="post/">{% csrf_token %}
         <div class="col-md-8 col-md-offset-2 fieldWrapper">
           {{ form.text.errors }}
           {{ form.text }}
