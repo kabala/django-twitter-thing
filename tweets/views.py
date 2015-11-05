@@ -1,6 +1,6 @@
 from django.views.generic import View
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from user_profile.models import User
 from tweets.models import Tweet, HashTag
 from tweets.forms import TweetForm
@@ -39,7 +39,9 @@ class PostTweet(View):
             words = form.cleaned_data['text'].split(" ")
             for word in words:
                 if word[0] == "#":
-                    hashtag = HashTag.objects.get_or_create(
+                    hashtag, created = HashTag.objects.get_or_create(
                         name=word[1:])
                     hashtag.tweet.add(tweet)
-        return HttpResponseRedirect('/user/'+username)
+            return HttpResponseRedirect('/user/'+username)
+        else:
+            return HttpResponse('Hi')
