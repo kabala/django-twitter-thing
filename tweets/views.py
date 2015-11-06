@@ -32,12 +32,14 @@ class PostTweet(View):
     """Tweet Post form available on page /user/<username> URL"""
     def post(self, request, username):
         form = TweetForm(self.request.POST)
+        print(form)
+        print(request.POST)
         if form.is_valid():
             user = User.objects.get(username=username)
             tweet = Tweet()
-            tweet.text=form.cleaned_data['text'],
-            tweet.user=user,
-            tweet.country=form.cleaned_data['country']
+            tweet.text = form.cleaned_data['text'],
+            tweet.user = user,
+            tweet.country = form.cleaned_data['country']
             tweet.save()
             words = form.cleaned_data['text'].split(" ")
             for word in words:
