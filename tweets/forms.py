@@ -7,6 +7,5 @@ class TweetForm(forms.Form):
             attrs={
                 'rows': 1, 'cols': 85, 'class': 'form-control post-tweet',
                 'placeholder': 'Post a new Tweet', 'required': True}),
-        max_length=160)
-    country = forms.CharField(widget=forms.HiddenInput(
-        attrs={'required': False}))
+        max_length=160, required=True)
+    country = forms.CharField(widget=forms.HiddenInput(), required=False)
